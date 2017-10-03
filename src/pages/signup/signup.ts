@@ -18,10 +18,10 @@ export class Signup {
       let emailRegex  = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 
       this.signupForm = this.formBuilder.group({
-        name: ['' , Validators.required, Validators.minLength(3)],
-        username: ['' , Validators.required, Validators.minLength(3)],
+        name: ['' , [Validators.required, Validators.minLength(3)]],
+        username: ['' , [Validators.required, Validators.minLength(3)]],
         email: ['' , Validators.compose([Validators.required, Validators.pattern(emailRegex)])],
-        password: ['' , Validators.required, Validators.minLength(6)],
+        password: ['' , [Validators.required, Validators.minLength(6)]],
       });
   }
 
