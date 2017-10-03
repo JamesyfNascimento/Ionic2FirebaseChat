@@ -1,5 +1,5 @@
 // import { User } from './../../models/user.module';
-// import { AuthService } from './../../providers/auth-service';
+import { AuthService } from './../../providers/auth-service';
 import { NavController, NavParams, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder ,Validators} from '@angular/forms';
@@ -55,15 +55,15 @@ export class Signup {
         console.log('Usuario cadastrado!');
         // disabilitando o loading da tela
         loading.dismiss();
-      }).catch((error: Error) => {
+      }).catch((error: any) => {
         console.log(error);
         loading.dismiss();
-        this.showAlert(error.message);
+        this.showAlert(error);
       });
-    }).catch((error: Error) => {
+    }).catch((error: any) => {
       console.log(error);
       loading.dismiss();
-      this.showAlert(error.message);
+      this.showAlert(error);
     });
    }
 
