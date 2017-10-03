@@ -1,6 +1,6 @@
-import { User } from './../../models/user.module';
-import { AuthService } from './../../providers/auth-service';
-import { NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+// import { User } from './../../models/user.module';
+// import { AuthService } from './../../providers/auth-service';
+import { NavController, NavParams, AlertController, LoadingController, Loading } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder ,Validators} from '@angular/forms';
 import { UserService } from './../../providers/user.service';
@@ -34,7 +34,11 @@ export class Signup {
       });
   }
     
+  // submit do form
    onSubmit(): void {
+    // chamada do loading para aparecer na tela
+    let loading: Loading = this.showLoading();
+
     let formUser = this.signupForm.value;
     this.AuthService.createAuthUser(
     {
@@ -44,13 +48,44 @@ export class Signup {
     ).then((authState: firebase.User) => {
       // não grava a password no firebase
       delete formUser.password;
-      // pega id do usuario gerado no database
+      // cria um atributo uid e seta ele com o valor do id do usuario gerado no firebase
       formUser.uid = authState.uid;
       this.userService.creat(this.signupForm.value)
       .then(() => {
-      console.log('Usuario cadastrado!');
+        console.log('Usuario cadastrado!');
+        // disabilitando o loading da tela
+        loading.dismiss();
+      }).catch((error: Error) => {
+        console.log(error);
+        loading.dismiss();
+        this.showAlert(error.message);
       });
+    }).catch((error: Error) => {
+      console.log(error);
+      loading.dismiss();
+      this.showAlert(error.message);
     });
    }
+
+   // Loading para a página
+  private showLoading(): Loading {
+    let loading: Loading = this.loadingCtrl.create({
+      content: "Please Wait"
+    });
+
+    // apresenta o loading da tela
+    loading.present();
+
+    return loading;
+
+  }
+
+  // metodo para mostrar um aviso para o usuário
+  private showAlert(message : string): void{
+    this.alertCtrl.create({
+      message: message,
+      buttons: ['Ok']
+    }).present();
+  }
 
 }

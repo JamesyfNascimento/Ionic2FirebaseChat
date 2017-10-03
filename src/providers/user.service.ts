@@ -15,7 +15,7 @@ export class UserService {
 
   constructor(
     public af: AngularFireDatabase ,
-    public http: Http
+    public http: Http,
   ) {
     console.log('Hello User Provider');
     // seta caminho raiz da lista de usúario
@@ -27,5 +27,7 @@ export class UserService {
   creat(user: User): firebase.Promise<void> {
     return this.af.object(`/user/${user.uid}`).set(user);
   }
+
+  
 
 }
