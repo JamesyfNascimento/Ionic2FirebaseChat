@@ -1,3 +1,4 @@
+import { AuthService } from './../providers/auth-service';
 import { UserService } from './../providers/user.service';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -15,6 +16,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { AngularFireModule , FirebaseAppConfig } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { HttpModule } from '@angular/http';
 
 const firebaseAppConfig: FirebaseAppConfig = {
   apiKey: "AIzaSyD2lMF5nm3FgAyWqQNp6Q20akiE-T_SU_o",
@@ -38,7 +40,8 @@ const firebaseAppConfig: FirebaseAppConfig = {
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseAppConfig),
     AngularFireDatabaseModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    HttpModule 
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -50,6 +53,7 @@ const firebaseAppConfig: FirebaseAppConfig = {
     Signup 
   ],
   providers: [
+    AuthService,
     StatusBar,
     SplashScreen,
     UserService,
