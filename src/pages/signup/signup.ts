@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder ,Validators} from '@angular/forms';
 import { UserService } from './../../providers/user.service';
 import * as firebase from 'firebase/app';
-
+import 'rxjs/add/operator/first'
 
 @Component({
   selector: 'page-signup',
@@ -38,33 +38,46 @@ export class Signup {
    onSubmit(): void {
     // chamada do loading para aparecer na tela
     let loading: Loading = this.showLoading();
-
     let formUser = this.signupForm.value;
-    this.AuthService.createAuthUser(
-    {
-      email: formUser.email,
-      password: formUser.password
-    }
-    ).then((authState: firebase.User) => {
-      // não grava a password no firebase
-      delete formUser.password;
-      // cria um atributo uid e seta ele com o valor do id do usuario gerado no firebase
-      formUser.uid = authState.uid;
-      this.userService.creat(this.signupForm.value)
-      .then(() => {
-        console.log('Usuario cadastrado!');
-        // disabilitando o loading da tela
-        loading.dismiss();
-      }).catch((error: any) => {
-        console.log(error);
-        loading.dismiss();
-        this.showAlert(error);
-      });
-    }).catch((error: any) => {
-      console.log(error);
-      loading.dismiss();
-      this.showAlert(error);
-    });
+    let username = formUser.username;
+
+    // verifica se já existe um usuario com esse username
+    this.userService.userExists(username)
+        .first()//verificar apenas um vez no banco, como se fosse um promisse
+        .subscribe((userExists: boolean) => {
+
+          if(!userExists){
+
+            this.AuthService.createAuthUser({
+              email: formUser.email,
+              password: formUser.password
+            }
+            ).then((authState: firebase.User) => {
+              // não grava a password no firebase
+              delete formUser.password;
+              // cria um atributo uid e seta ele com o valor do id do usuario gerado no firebase
+              formUser.uid = authState.uid;
+              this.userService.creat(this.signupForm.value)
+              .then(() => {
+                console.log('Usuario cadastrado!');
+                // disabilitando o loading da tela
+                loading.dismiss();
+              }).catch((error: any) => {
+                console.log(error);
+                loading.dismiss();
+                this.showAlert(error);
+              });
+            }).catch((error: any) => {
+              console.log(error);
+              loading.dismiss();
+              this.showAlert(error);
+            });
+          }else{
+            this.showAlert(`The Username ${username} already exists`);
+            loading.dismiss();
+          }
+
+        })
    }
 
    // Loading para a página

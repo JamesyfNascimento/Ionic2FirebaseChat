@@ -2,9 +2,8 @@ import { User } from 'firebase/app';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import * as firebase from 'firebase/app';
-
-
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { BaseService } from './base-service';
 
@@ -29,6 +28,19 @@ export class UserService extends BaseService{
   creat(user: User): firebase.Promise<void> {
     return this.af.object(`/user/${user.uid}`).set(user)
       .catch(this.handlePromiseError);
+  }
+
+  // metodo que recebe como parametro um username e
+  // verifica se existe algum usuario com esse username
+  userExists(username: string): Observable<boolean>{
+    return this.af.list('/user',{
+      query: {
+        orderByChild: 'username',
+        equalTo: username
+      }
+    }).map((user: User[]) => {
+      return user.length > 0;
+    }).catch(this.handleObservableError);
   }
 
   
