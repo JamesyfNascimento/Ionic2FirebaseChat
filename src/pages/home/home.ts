@@ -13,6 +13,7 @@ import { Signup } from './../signup/signup';
 export class HomePage {
 
   users: FirebaseListObservable<Users[]>;
+  view: string = 'chats';
   
 
   constructor(

@@ -1,23 +1,24 @@
-import { Signin } from './../pages/signin/signin';
-import { AuthService } from './../providers/auth-service';
-import { UserService } from './../providers/user.service';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
-import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
-import { Signup } from './../pages/signup/signup';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AngularFireModule , FirebaseAppConfig } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { HttpModule } from '@angular/http';
+
+import { AboutPage } from '../pages/about/about';
+import { ContactPage } from '../pages/contact/contact';
+import { HomePage } from '../pages/home/home';
+import { TabsPage } from '../pages/tabs/tabs';
+import { Signup } from './../pages/signup/signup';
+import { Signin } from './../pages/signin/signin';
+import { AuthService } from './../providers/auth-service';
+import { UserService } from './../providers/user.service';
+import { CustomLoggedHeader } from '../components/custom-logged-header/custom-logged-header';
+
 
 const firebaseAppConfig: FirebaseAppConfig = {
   apiKey: "AIzaSyD2lMF5nm3FgAyWqQNp6Q20akiE-T_SU_o",
@@ -35,7 +36,8 @@ const firebaseAppConfig: FirebaseAppConfig = {
     HomePage,
     TabsPage,
     Signup,
-    Signin
+    Signin,
+    CustomLoggedHeader
   ],
   imports: [
     BrowserModule,

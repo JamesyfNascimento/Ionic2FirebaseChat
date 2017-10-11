@@ -81,7 +81,14 @@ export class Signin {
 
   // chama a pagina home
   onHome(): void {
-    this.navCtrl.push(HomePage);
+    this.navCtrl.push(HomePage)
+    .then((hasAccess: boolean) => {
+      if(hasAccess){
+        console.log("Autorizado!");      
+      }else {
+        console.log("Não Autorizado!");              
+      }
+    });
   }
 
   // logout 
