@@ -1,3 +1,4 @@
+import { Signin } from './../pages/signin/signin';
 import { AuthService } from './../providers/auth-service';
 import { UserService } from './../providers/user.service';
 import { NgModule, ErrorHandler } from '@angular/core';
@@ -33,7 +34,8 @@ const firebaseAppConfig: FirebaseAppConfig = {
     ContactPage,
     HomePage,
     TabsPage,
-    Signup
+    Signup,
+    Signin
   ],
   imports: [
     BrowserModule,
@@ -50,7 +52,8 @@ const firebaseAppConfig: FirebaseAppConfig = {
     ContactPage,
     HomePage,
     TabsPage,
-    Signup 
+    Signup,
+    Signin 
   ],
   providers: [
     AuthService,

@@ -1,31 +1,38 @@
-import { User } from './../../models/user.module';
+import { AuthService } from './../../providers/auth-service';
 import { UserService } from './../../providers/user.service';
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { FirebaseListObservable } from 'angularfire2/database';
+import { Users } from './../../models/user.module';
 import { Signup } from './../signup/signup';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
 
-  users: FirebaseListObservable<User[]>;
+  users: FirebaseListObservable<Users[]>;
   
 
   constructor(
+    public authService: AuthService,
     public navCtrl: NavController,
     public userService: UserService
   ) {
 
   }
 
+  ionViewCanEnter(): Promise<boolean> {
+    return this.authService.authenticated;
+  }
+
   ionViewDidLoad() {
     this.users = this.userService.users;
   }
 
-  onChatCreate(user : User) : void {
-    console.log("User", user);
+  onChatCreate(users : Users) : void {
+    console.log("User", users);
     
   }
 

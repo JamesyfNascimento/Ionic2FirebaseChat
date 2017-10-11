@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder ,Validators} from '@angular/forms';
 import { UserService } from './../../providers/user.service';
 import * as firebase from 'firebase/app';
+import { HomePage } from './../home/home';
 import 'rxjs/add/operator/first'
 
 @Component({
@@ -55,11 +56,14 @@ export class Signup {
             ).then((authState: firebase.User) => {
               // não grava a password no firebase
               delete formUser.password;
-              // cria um atributo uid e seta ele com o valor do id do usuario gerado no firebase
+              // cria um atributo uid(id do ususario) e seta ele com o valor do id do usuario gerado no firebase
               formUser.uid = authState.uid;
               this.userService.creat(this.signupForm.value)
               .then(() => {
                 console.log('Usuario cadastrado!');
+                this.showAlert('Usuario cadastrado!');
+                this.navCtrl.setRoot(HomePage);
+                
                 // disabilitando o loading da tela
                 loading.dismiss();
               }).catch((error: any) => {

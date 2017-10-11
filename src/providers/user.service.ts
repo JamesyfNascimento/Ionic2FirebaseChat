@@ -1,3 +1,4 @@
+import { Users } from './../models/user.module';
 import { User } from 'firebase/app';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
@@ -11,7 +12,7 @@ import { BaseService } from './base-service';
 export class UserService extends BaseService{
 
   // lista de usúario do App
-  users: FirebaseListObservable<User[]>;
+  users: FirebaseListObservable<Users[]>;
 
   constructor(
     public af: AngularFireDatabase ,

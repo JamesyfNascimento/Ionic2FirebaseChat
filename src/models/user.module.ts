@@ -1,6 +1,4 @@
-export class User {
-    
-
+export class Users {
     constructor(
         public name: string,
         public username: string,
