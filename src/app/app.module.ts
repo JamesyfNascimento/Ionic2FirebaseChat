@@ -24,6 +24,7 @@ const firebaseAppConfig: FirebaseAppConfig = {
   apiKey: "AIzaSyD2lMF5nm3FgAyWqQNp6Q20akiE-T_SU_o",
   authDomain: "ionic-2-firebase-chat-3eaef.firebaseapp.com",
   databaseURL: "https://ionic-2-firebase-chat-3eaef.firebaseio.com",
+  projectId: "ionic-2-firebase-chat-3eaef",
   storageBucket: "ionic-2-firebase-chat-3eaef.appspot.com",
   messagingSenderId: "633521561183"
 };
