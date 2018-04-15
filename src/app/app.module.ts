@@ -18,6 +18,7 @@ import { Signin } from './../pages/signin/signin';
 import { AuthService } from './../providers/auth-service';
 import { UserService } from './../providers/user.service';
 import { CustomLoggedHeader } from '../components/custom-logged-header/custom-logged-header';
+import { ChatService } from '../providers/chat-service';
 
 
 const firebaseAppConfig: FirebaseAppConfig = {
@@ -60,6 +61,7 @@ const firebaseAppConfig: FirebaseAppConfig = {
   ],
   providers: [
     AuthService,
+    ChatService,
     StatusBar,
     SplashScreen,
     UserService,
