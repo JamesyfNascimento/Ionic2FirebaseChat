@@ -25,13 +25,13 @@ import { UserInfoComponent } from './../components/user-info/user-info.component
 import { UserMenuComponent } from './../components/user-menu/user-menu.component';
 import { UserProfilePage } from './../pages/user-profile/user-profile';
 import { UserService } from './../providers/user.service';
-import { CustomLoggedHeaderComponent } from '../components/custom-logged-header/custom-logged-header';
+import { CustomLoggedHeaderComponent } from '../components/custom-logged-header/custom-logged-header.component';
 
 const firebaseAppConfig: FirebaseAppConfig = {
   apiKey: "AIzaSyD2lMF5nm3FgAyWqQNp6Q20akiE-T_SU_o",
   authDomain: "ionic-2-firebase-chat-3eaef.firebaseapp.com",
   databaseURL: "https://ionic-2-firebase-chat-3eaef.firebaseio.com",
-  projectId: "ionic-2-firebase-chat-3eaef",
+  projectId: "ionic-2-firebase-chat-3eaef", 
   storageBucket: "ionic-2-firebase-chat-3eaef.appspot.com",
   messagingSenderId: "633521561183"
 };
