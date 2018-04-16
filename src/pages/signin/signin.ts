@@ -1,46 +1,46 @@
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { AlertController , NavController, NavParams, Loading ,LoadingController} from 'ionic-angular';
 import { Component } from '@angular/core';
-import { Signup } from './../signup/signup';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertController, Loading, LoadingController, NavController, NavParams } from 'ionic-angular';
+
 import { AuthService } from './../../providers/auth-service';
 import { HomePage } from './../home/home';
+import { SignupPage } from './../signup/signup';
 
 @Component({
   selector: 'page-signin',
   templateUrl: 'signin.html',
 })
-export class Signin {
+export class SigninPage {
 
-  signinForm : FormGroup;
-  
+  signinForm: FormGroup;
+
   constructor(
-    public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     public authService: AuthService,
-    public navCtrl: NavController, 
-    public navParams: NavParams,
     public formBuilder: FormBuilder,
+    public loadingCtrl: LoadingController,
+    public navCtrl: NavController,
+    public navParams: NavParams
   ) {
-    let emailRegex = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-    this.signinForm = this.formBuilder.group({
-    email: ['', Validators.compose([Validators.required, Validators.pattern(emailRegex)])],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-    });
-  }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad Signin');
+    let emailRegex = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+
+    this.signinForm = this.formBuilder.group({
+      email: ['', Validators.compose([Validators.required, Validators.pattern(emailRegex)])],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+
   }
 
   onSubmit(): void {
 
     let loading: Loading = this.showLoading();
-    
+
     this.authService.signinWithEmail(this.signinForm.value)
       .then((isLogged: boolean) => {
 
         if (isLogged) {
-          this.navCtrl.push(HomePage);
+          this.navCtrl.setRoot(HomePage);
           loading.dismiss();
         }
 
@@ -49,52 +49,28 @@ export class Signin {
         loading.dismiss();
         this.showAlert(error);
       });
+
   }
 
-  
-  
-  // Loading para a página
+  onSignup(): void {
+    this.navCtrl.push(SignupPage);
+  }
+
   private showLoading(): Loading {
     let loading: Loading = this.loadingCtrl.create({
-      content: "Please Wait"
+      content: 'Please wait...'
     });
-    
-    // apresenta o loading da tela
+
     loading.present();
-    
+
     return loading;
-    
   }
-  
-  // metodo para mostrar um aviso para o usuário
-  private showAlert(message : string): void{
+
+  private showAlert(message: string): void {
     this.alertCtrl.create({
       message: message,
       buttons: ['Ok']
     }).present();
   }
-  
-  // chama a pagina signup
-  onSignup(): void {
-    this.navCtrl.push(Signup);
-  }
-
-  // chama a pagina home
-  onHome(): void {
-    this.navCtrl.push(HomePage)
-    .then((hasAccess: boolean) => {
-      if(hasAccess){
-        console.log("Autorizado!");      
-      }else {
-        console.log("Não Autorizado!");              
-      }
-    });
-  }
-
-  // logout 
-  onLogout(): void {
-    this.authService.logout();
-  } 
-
 
 }

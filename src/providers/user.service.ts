@@ -1,49 +1,90 @@
-import { Users } from './../models/user.module';
-import { User } from 'firebase/app';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import * as firebase from 'firebase/app';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map';
-import { BaseService } from './base-service';
+import { map } from 'rxjs/operators/map';
+
+import { FirebaseApp } from "angularfire2";
+import { AngularFireAuth } from "angularfire2/auth";
+import { AngularFireDatabase, AngularFireObject, AngularFireList } from "angularfire2/database";
+
+import { BaseService } from "./base-service";
+import { User } from './../models/user.model';
+
+import firebase from 'firebase/app';
+import 'firebase/storage';
 
 @Injectable()
-export class UserService extends BaseService{
+export class UserService extends BaseService {
 
-  // lista de usúario do App
-  users: FirebaseListObservable<Users[]>;
+  users: Observable<User[]>;
+  currentUser: AngularFireObject<User>;
 
   constructor(
-    public af: AngularFireDatabase ,
-    public http: Http,
+    public afAuth: AngularFireAuth,
+    public db: AngularFireDatabase,
+    public firebaseApp: FirebaseApp,
+    public http: Http
   ) {
     super();
-    console.log('Hello User Provider');
-    // seta caminho raiz da lista de usúario
-    this.users = this.af.list('/user/');
+    this.listenAuthState();
   }
 
-  // metodo para criar um uśuario setando o mesmo id do banco database
-  // obs: .set() cria ou substitui diretório
-  creat(user: User): firebase.Promise<void> {
-    return this.af.object(`/user/${user.uid}`).set(user)
+  private setUsers(uidToExclude: string): void {
+    this.users = this.mapListKeys<User>(
+      this.db.list<User>(`/users`,
+        (ref: firebase.database.Reference) => ref.orderByChild('name')
+      )
+    )
+      .map((users: User[]) => {
+        return users.filter((user: User) => user.$key !== uidToExclude);
+      });
+  }
+
+  private listenAuthState(): void {
+    this.afAuth
+      .authState
+      .subscribe((authUser: firebase.User) => {
+        if (authUser) {
+          console.log('Auth state alterado!');
+          this.currentUser = this.db.object(`/users/${authUser.uid}`);
+          this.setUsers(authUser.uid);
+        }
+      });
+  }
+
+  create(user: User, uuid: string): Promise<void> {
+    return this.db.object(`/users/${uuid}`)
+      .set(user)
       .catch(this.handlePromiseError);
   }
 
-  // metodo que recebe como parametro um username e
-  // verifica se existe algum usuario com esse username
-  userExists(username: string): Observable<boolean>{
-    return this.af.list('/user',{
-      query: {
-        orderByChild: 'username',
-        equalTo: username
-      }
-    }).map((user: User[]) => {
-      return user.length > 0;
-    }).catch(this.handleObservableError);
+  edit(user: { name: string, username: string, photo: string }): Promise<void> {
+    return this.currentUser
+      .update(user)
+      .catch(this.handlePromiseError);
   }
 
-  
+  userExists(username: string): Observable<boolean> {
+    return this.db.list(`/users`,
+      (ref: firebase.database.Reference) => ref.orderByChild('name').equalTo(username)
+    )
+      .valueChanges()
+      .map((users: User[]) => {
+        return users.length > 0;
+      }).catch(this.handleObservableError);
+  }
+
+  get(userId: string): AngularFireObject<User> {
+    return this.db.object<User>(`/users/${userId}`);
+  }
+
+  uploadPhoto(file: File, userId: string): firebase.storage.UploadTask {
+    return this.firebaseApp
+      .storage()
+      .ref()
+      .child(`/users/${userId}`)
+      .put(file);
+  }
 
 }

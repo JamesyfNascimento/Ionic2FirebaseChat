@@ -1,7 +1,7 @@
 import { Response } from '@angular/http';
 import { Observable } from 'rxjs';
+import { AngularFireList, AngularFireObject } from 'angularfire2/database';
 
-// constante para tornar a saída do erro mais amigavel
 const extractError = (error: Response | any): string => {
     // In a real world app, we might use a remote logging infrastructure
     let errMsg: string;
@@ -25,6 +25,18 @@ export abstract class BaseService {
 
     protected handleObservableError(error: Response | any): Observable<any> {
         return Observable.throw(extractError(error));
+    }
+
+    mapListKeys<T>(list: AngularFireList<T>): Observable<T[]> {
+        return list
+            .snapshotChanges()
+            .map(actions => actions.map(action => ({ $key: action.key, ...action.payload.val() })));
+    }
+
+    mapObjectKey<T>(object: AngularFireObject<T>): Observable<T> {
+        return object
+            .snapshotChanges()
+            .map(action => ({ $key: action.key, ...action.payload.val() }));
     }
 
 }
